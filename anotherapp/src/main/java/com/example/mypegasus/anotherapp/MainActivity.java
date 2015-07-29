@@ -1,28 +1,44 @@
 package com.example.mypegasus.anotherapp;
 
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
+import android.os.RemoteException;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+
+import com.example.mypegasus.startservicefromanotherapp.IAppServiceRemoteBinder;
 
 
-public class MainActivity extends ActionBarActivity implements View.OnClickListener {
+public class MainActivity extends ActionBarActivity implements View.OnClickListener, ServiceConnection {
 
     private Intent serviceIntent;
+    private EditText etInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        etInput = (EditText) findViewById(R.id.et_input);
+
         serviceIntent = new Intent();
+        /**
+         * ComponentName 两个参数package路径，class路径，其中class路径必须是完整的，即包含所在包的路径
+         * */
         serviceIntent.setComponent(new ComponentName("com.example.mypegasus.startservicefromanotherapp", "com.example.mypegasus.startservicefromanotherapp.AppService"));
 
         findViewById(R.id.btn_startAppService).setOnClickListener(this);
         findViewById(R.id.btn_stopAppService).setOnClickListener(this);
+        findViewById(R.id.btn_bindAppService).setOnClickListener(this);
+        findViewById(R.id.btn_unbindAppService).setOnClickListener(this);
+        findViewById(R.id.btn_syncDataToAppService).setOnClickListener(this);
     }
 
     @Override
@@ -56,6 +72,38 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             case R.id.btn_stopAppService:
                 stopService(serviceIntent);
                 break;
+            case R.id.btn_bindAppService:
+                bindService(serviceIntent, this, Context.BIND_AUTO_CREATE);
+                break;
+            case R.id.btn_unbindAppService:
+                unbindService(this);
+                binder = null;
+                break;
+            case R.id.btn_syncDataToAppService:
+                if (binder != null) {
+                    try {
+                        binder.setData(etInput.getText().toString());
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
         }
     }
+
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+
+        System.out.println("Bind Service Connected");
+        System.out.println(service);
+
+        binder = IAppServiceRemoteBinder.Stub.asInterface(service);
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+
+    }
+
+    private IAppServiceRemoteBinder binder;
 }

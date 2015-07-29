@@ -26,4 +26,28 @@
         android:text="停止外部服务"
         android:id="@+id/btn_stopAppService" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="绑定外部服务"
+        android:id="@+id/btn_bindAppService" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="解除绑定外部服务"
+        android:id="@+id/btn_unbindAppService" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/et_input"
+        android:text="这是另一个应用的数据"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="同步数据到绑定的服务中"
+        android:id="@+id/btn_syncDataToAppService" />
+
 </LinearLayout>

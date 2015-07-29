@@ -14,14 +14,14 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        startService(new Intent(this, AppService.class));
+        //startService(new Intent(this, AppService.class));
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
-        stopService(new Intent(this, AppService.class));
+        //stopService(new Intent(this, AppService.class));
     }
 
     @Override
